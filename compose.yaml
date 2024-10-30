@@ -1,0 +1,21 @@
+services:
+  database:
+    image: mariadb:latest
+    restart: always
+    network_mode: host
+    environment:
+      MARIADB_ROOT_PASSWORD: "hello"
+      MARIADB_DATABASE: "chatapp"
+    volumes:
+      - ./db-data:/var/lib/mysql
+      - ./DB_CHATAPP.sql:/docker-entrypoint-initdb.d/dump.sql
+
+  lucee:
+    build: .
+    network_mode: host
+    environment:
+      LUCEE_ADMIN_PASSWORD: "hello"
+      LUCEE_EXTENSIONS: "3F9DFF32-B555-449D-B0EB5DB723044045"
+    volumes:
+      - ./src:/var/www
+
