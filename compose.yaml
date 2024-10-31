@@ -2,20 +2,30 @@ services:
   database:
     image: mariadb:latest
     restart: always
-    network_mode: host
+    networks:
+      - app-network
     environment:
       MARIADB_ROOT_PASSWORD: "hello"
       MARIADB_DATABASE: "chatapp"
     volumes:
       - ./db-data:/var/lib/mysql
       - ./DB_CHATAPP.sql:/docker-entrypoint-initdb.d/dump.sql
+    ports:
+      - "3306:3306"  # Expose MariaDB on port 3306
 
   lucee:
     build: .
-    network_mode: host
+    networks:
+      - app-network
     environment:
       LUCEE_ADMIN_PASSWORD: "hello"
       LUCEE_EXTENSIONS: "3F9DFF32-B555-449D-B0EB5DB723044045"
     volumes:
       - ./src:/var/www
+    ports:
+      - "8888:8888"  # Expose Lucee on port 8888
+
+networks:
+  app-network:
+    driver: bridge
 
